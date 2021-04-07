@@ -11,7 +11,7 @@ db = SQLAlchemy()
 
 class User(db.Model):
     __tablename__ = 'user'
-    id = db.Column(Integer, primary_key=True) 
+    id = db.Column(db.Integer, primary_key=True) 
     firstName = db.Column(db.String(50))
     lastName = db.Column(db.String(50))
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -42,4 +42,37 @@ class User(db.Model):
         user = User.query.get(id)
         db.session.delete(user)
         db.session.commit()
+
+class Character(db.Model):
+    __tablename__ = 'character'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    age = db.Column(db.Integer)
+    birthYear = db.Column(db.String(25))
+    gender = db.Column(db.String(25))
+    description = db.Column(db.String(300))
+    # favorite_id = Column(Integer, ForeignKey('favorite.id'))
     
+    def __repr__(self):
+        return '<Character %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "age": self.age,
+            "birthYear": self.birthYear,
+            "gender": self.gender,
+            "description": self.description
+            # do not serialize the password, its a security breach
+        }
+
+    def getAll():
+        all_characters = Character.query.all()
+        all_characters = list(map(lambda x: x.serialize(), all_characters))
+        return all_characters
+
+    def deleteUser(id):
+        character = Character.query.get(id)
+        db.session.delete(character)
+        db.session.commit()
