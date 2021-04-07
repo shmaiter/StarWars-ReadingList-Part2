@@ -30,11 +30,21 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
+@app.route('/users', methods=['GET'])
 def handle_hello():
-
+    users = User.getAll()
     response_body = {
         "msg": "Hello, this is your GET /user response "
+    }
+
+    return jsonify(users), 200
+
+@app.route('/users/<int:position>', methods=['DELETE'])
+def delete_user(position):
+    print("This is the position to delete: ",position)
+    temp = User.deleteUser(position)
+    response_body = {
+        "msg": "User deleted "
     }
 
     return jsonify(response_body), 200
