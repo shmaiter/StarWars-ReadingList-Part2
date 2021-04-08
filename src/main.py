@@ -9,6 +9,8 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Character, Planet
+# from flask_jwt_extended import JWTManager
+# from flask_jwt_extended import create_access_token
 #from models import Person
 
 app = Flask(__name__)
@@ -19,6 +21,9 @@ MIGRATE = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 setup_admin(app)
+# Setup the Flask-JWT-Extended extension
+# app.config["JWT_SECRET_KEY"] = os.environ.get('JW_TOKEN')  # Change this "super secret" with something else!
+# jwt = JWTManager(app)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
@@ -32,7 +37,7 @@ def sitemap():
 
 # Users endpoints
 @app.route('/users', methods=['GET'])
-def handle_users():
+def get_users():
     users = User.getAll()
     response_body = {
         "msg": "Hello, this is your GET /users response "
@@ -52,7 +57,7 @@ def delete_user(position):
 
 # Characters endpoints
 @app.route('/characters', methods=['GET'])
-def handle_characters():
+def get_characters():
     characters = Character.getAll()
     response_body = {
         "msg": "Hello, this is your GET /characters response "
@@ -60,15 +65,36 @@ def handle_characters():
 
     return jsonify(characters), 200
 
+@app.route('/characters/<int:position>', methods=['DELETE'])
+def delete_character(position):
+    print("This is the position to delete: ",position)
+    temp = Character.deleteCharacter(position)
+    response_body = {
+        "msg": "Character deleted "
+    }
+
+    return jsonify(response_body), 200
+
 # Planets endpoints
 @app.route('/planets', methods=['GET'])
-def handle_planets():
+def get_planets():
     planets = Planet.getAll()
     response_body = {
         "msg": "Hello, this is your GET /planets response "
     }
 
     return jsonify(planets), 200
+
+@app.route('/planets/<int:position>', methods=['DELETE'])
+def delete_planet(position):
+    print("This is the position to delete: ",position)
+    temp = Planet.deletePlanet(position)
+    response_body = {
+        "msg": "Character deleted "
+    }
+
+    return jsonify(response_body), 200
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

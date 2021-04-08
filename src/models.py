@@ -18,10 +18,10 @@ class User(db.Model):
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
     picture = db.Column(db.String(250), nullable=True)
-    # user = relationship('Favorite', back_populates="user") # One to Many
+    favorites = db.relationship('Favorite', lazy=True) # One to Many
     
     def __repr__(self):
-        return '<User %r>' % self.username
+        return '<User %r>' % self.firstName
 
     def serialize(self):
         return {
@@ -29,7 +29,8 @@ class User(db.Model):
             "firstName": self.firstName,
             "lastName": self.lastName,
             "email": self.email,
-            "picture": self.picture
+            "picture": self.picture,
+            "favorites": self.favorites
             # do not serialize the password, its a security breach
         }
 
@@ -51,7 +52,7 @@ class Character(db.Model):
     birthYear = db.Column(db.String(25))
     gender = db.Column(db.String(25))
     description = db.Column(db.String(300))
-    # favorite_id = Column(Integer, ForeignKey('favorite.id'))
+    # favorite_id = db.Column(db.Integer, ForeignKey('favorite.id'))
     
     def __repr__(self):
         return '<Character %r>' % self.name
@@ -85,7 +86,7 @@ class Planet(db.Model):
     terrain = db.Column(db.String(25))
     climate = db.Column(db.String(25))
     description = db.Column(db.String(300))
-    # favorite_id = Column(Integer, ForeignKey('favorite.id'))
+    # favorite_id = db.Column(db.Integer, ForeignKey('favorite.id'))
     
     def __repr__(self):
         return '<Planet %r>' % self.name
@@ -110,3 +111,27 @@ class Planet(db.Model):
         planet = Planet.query.get(id)
         db.session.delete(planet)
         db.session.commit()
+
+class Favorite(db.Model):
+    __tablename__ = 'favorite'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.String(25))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
+    item_id = db.Column(db.Integer, unique=False, nullable=False)
+    item_type = db.Column(db.String(80), unique=False, nullable=False)
+
+    # character = db.relationship('Character', back_populates="favorite") # One to Many
+    # planet = db.relationship('Planet', back_populates="favorite") # One to Many
+    
+    def __repr__(self):
+        return '<Favorite %r>' % self.date
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "date": self.date,
+            "user_id": self.user_id,
+            "item_id": self.item_id,
+            "item_type": self.item_type
+            # do not serialize the password, its a security breach
+        }
