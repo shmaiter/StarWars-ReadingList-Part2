@@ -72,7 +72,41 @@ class Character(db.Model):
         all_characters = list(map(lambda x: x.serialize(), all_characters))
         return all_characters
 
-    def deleteUser(id):
+    def deleteCharacter(id):
         character = Character.query.get(id)
         db.session.delete(character)
+        db.session.commit()
+
+class Planet(db.Model):
+    __tablename__ = 'planet'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    population = db.Column(db.Integer)
+    terrain = db.Column(db.String(25))
+    climate = db.Column(db.String(25))
+    description = db.Column(db.String(300))
+    # favorite_id = Column(Integer, ForeignKey('favorite.id'))
+    
+    def __repr__(self):
+        return '<Planet %r>' % self.name
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "population": self.population,
+            "terrain": self.terrain,
+            "climate": self.climate,
+            "description": self.description
+            # do not serialize the password, its a security breach
+        }
+
+    def getAll():
+        all_planets = Planet.query.all()
+        all_planets = list(map(lambda x: x.serialize(), all_planets))
+        return all_planets
+
+    def deletePlanet(id):
+        planet = Planet.query.get(id)
+        db.session.delete(planet)
         db.session.commit()
