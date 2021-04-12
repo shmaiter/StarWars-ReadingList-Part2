@@ -11,8 +11,6 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-    
-
 class Service:
    
     def get_favorite_per_type(fav):
@@ -34,7 +32,7 @@ class Service:
 
         all_favorites = Favorite.query.all()
 
-        all_favorites = list(map(lambda x: get_favorite_per_type(x), all_favorites)) 
+        all_favorites = list(map(lambda x: Service.get_favorite_per_type(x), all_favorites)) 
 
         return all_favorites
 

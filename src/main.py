@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Character, Planet
+from models import db, User, Character, Planet, Favorite
 from service import Service
 
 # import Flask-JWT-Extended library
@@ -43,24 +43,24 @@ def sitemap():
 def create_token():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    # Query your database for username and password
+    # Query your User table with username and password
     user = User.query.filter_by(email=email, password=password).first()
     if user is None:
-        # the user was not found on the database
+        # The user was not found on the database
         return jsonify({"msg": "Bad email or password"}), 401
     
     # create a new token with the user id inside
     access_token = create_access_token(identity=user.id)
     return jsonify({"token": access_token})
 
-@app.route("/protected", methods=["GET"])
-@jwt_required()
-def protected():
-    # Access the identity of the current user with get_jwt_identity
-    current_user_id = get_jwt_identity()
-    user = User.query.get(current_user_id)
+# @app.route("/protected", methods=["GET"])
+# @jwt_required()
+# def protected():
+#     # Access the identity of the current user with get_jwt_identity
+#     current_user_id = get_jwt_identity()
+#     user = User.query.get(current_user_id)
     
-    return jsonify({"email": user.email, "password": user.password }), 200
+#     return jsonify({"email": user.email, "password": user.password }), 200
 
 # Users endpoints
 @app.route('/users', methods=['GET'])
@@ -122,25 +122,26 @@ def delete_planet(position):
 
     return jsonify(response_body), 200
 
-# Favorite endpoints:
-# @app.route('/favorite', methods=['GET'])
-# @jwt_required()
-# def get_all_favorite():
+# Favorites endpoints
+@app.route('/favorites', methods=['GET'])
+@jwt_required()
+def get_favorites():
     
-#     # Access the identity of the current user with get_jwt_identity
-#     current_user_id = get_jwt_identity()
+    # Access the identity of the current user with get_jwt_identity
+    current_user_id = get_jwt_identity()
 
-#     all_favorites = Service.get_favorites(current_user_id)
-#     return jsonify(all_favorites), 200
+    all_favorites = Service.get_favorites(current_user_id)
+    return jsonify(all_favorites), 200
 
-# @app.route('/favorite', methods=['POST'])
-# def add_favorite():
-#     request_body = request.get_json()
-#     favorite = Favorite(item_id=request_body["item_id"], item_type=request_body["item_type"], user_id=request_body["user_id"])
-#     db.session.add(favorite)
-#     db.session.commit()
-#     print("Favorite added: ", request_body)
-#     return jsonify(request_body), 200
+@app.route('/favorites', methods=['POST'])
+def add_favorite():
+    request_body = request.get_json()
+    # define an instance of Favorite
+    favorite = Favorite(date=request_body["date"], item_id=request_body["item_id"], item_type=request_body["item_type"], user_id=request_body["user_id"])
+    db.session.add(favorite)
+    db.session.commit()
+    print("Favorite added: ", request_body)
+    return jsonify(request_body), 200
 
 # @app.route('/favorite/<int:id>', methods=['DELETE'])
 # def delete_favorite(id):
