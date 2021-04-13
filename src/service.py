@@ -30,7 +30,7 @@ class Service:
         if user is None:
             raise APIException('User not found', status_code=404)
 
-        # all_favorites = Favorite.query.all()
+        # Return all the favorites of the particular id
         userFavorites = Favorite.query.filter_by(user_id=user_id).all()
 
         userFavorites = list(map(lambda x: Service.get_favorite_per_type(x), userFavorites)) 

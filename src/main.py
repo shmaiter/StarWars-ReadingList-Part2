@@ -21,13 +21,13 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_CONNECTION_STRING')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = os.environ.get('JW_TOKEN')  # Change this "super secret" with something else!
+jwt = JWTManager(app)
 MIGRATE = Migrate(app, db)
 db.init_app(app)
 CORS(app)
 setup_admin(app)
-# Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.environ.get('JW_TOKEN')  # Change this "super secret" with something else!
-jwt = JWTManager(app)
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
@@ -41,8 +41,8 @@ def sitemap():
 
 @app.route("/token", methods=["POST"])
 def create_token():
-    email = request.json.get("email", None)
-    password = request.json.get("password", None)
+    email = request.json.get("email")
+    password = request.json.get("password")
     # Query your User table with username and password
     user = User.query.filter_by(email=email, password=password).first()
     if user is None:
