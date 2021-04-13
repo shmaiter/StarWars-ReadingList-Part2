@@ -46,10 +46,12 @@ class User(db.Model):
 class Character(db.Model):
     __tablename__ = 'character'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(25))
     gender = db.Column(db.String(25))
     hair_color = db.Column(db.String(25))
     eye_color = db.Column(db.String(25))
+    birth_year = db.Column(db.String(25))
+    mass = db.Column(db.Float)
     # favorite_id = db.Column(db.Integer, ForeignKey('favorite.id'))
     
     def __repr__(self):
@@ -61,7 +63,9 @@ class Character(db.Model):
             "name": self.name,
             "gender": self.gender,
             "hair_color": self.hair_color,
-            "eye_color": self.eye_color
+            "eye_color": self.eye_color,
+            "birth_year": self.birth_year,
+            "mass": self.mass
             # do not serialize the password, its a security breach
         }
 
@@ -78,9 +82,12 @@ class Character(db.Model):
 class Planet(db.Model):
     __tablename__ = 'planet'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50))
+    name = db.Column(db.String(25))
     population = db.Column(db.Integer)
     terrain = db.Column(db.String(25))
+    climate = db.Column(db.String(25))
+    diameter = db.Column(db.Integer)
+    orbital_period = db.Column(db.Integer)
     # favorite_id = db.Column(db.Integer, ForeignKey('favorite.id'))
     
     def __repr__(self):
@@ -91,7 +98,10 @@ class Planet(db.Model):
             "id": self.id,
             "name": self.name,
             "population": self.population,
-            "terrain": self.terrain
+            "terrain": self.terrain,
+            "climate": self.climate,
+            "diameter": self.diameter,
+            "orbital_period": self.orbital_period
             # do not serialize the password, its a security breach
         }
 
