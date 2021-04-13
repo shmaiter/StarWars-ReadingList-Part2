@@ -94,7 +94,7 @@ def get_characters():
 
 @app.route('/characters/<int:position>', methods=['DELETE'])
 def delete_character(position):
-    print("This is the position to delete: ",position)
+
     temp = Character.deleteCharacter(position)
     response_body = {
         "msg": "Character deleted "
@@ -129,7 +129,6 @@ def get_favorites():
     
     # Access the identity of the current user with get_jwt_identity
     current_user_id = get_jwt_identity()
-
     all_favorites = Service.get_favorites(current_user_id)
     return jsonify(all_favorites), 200
 
@@ -138,24 +137,25 @@ def add_favorite():
     request_body = request.get_json()
     # define an instance of Favorite
     favorite = Favorite(date=request_body["date"], item_id=request_body["item_id"], item_type=request_body["item_type"], user_id=request_body["user_id"])
+    # save it on the database table for Favorites
     db.session.add(favorite)
     db.session.commit()
-    print("Favorite added: ", request_body)
+    
     return jsonify(request_body), 200
 
-# @app.route('/favorite/<int:id>', methods=['DELETE'])
-# def delete_favorite(id):
-#     favorite = Favorite.query.get(id)
+@app.route('/favorites/<int:position>', methods=['DELETE'])
+def delete_favorite(position):
+    favorite = Favorite.query.get(position)
 
-#     if favorite is None:
-#         raise APIException('Favorite not found', status_code=404)
+    if favorite is None:
+        raise APIException('Favorite not found', status_code=404)
 
-#     db.session.delete(favorite)
-#     db.session.commit()
-#     response_body = {
-#          "msg": "Favorite delete successful",
-#     }
-#     return jsonify(response_body), 200
+    db.session.delete(favorite)
+    db.session.commit()
+    response_body = {
+         "msg": "Favorite deleted successful",
+    }
+    return jsonify(response_body), 200
 
 # this only runs if `$ python src/main.py` is executed
 

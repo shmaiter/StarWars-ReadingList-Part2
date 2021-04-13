@@ -29,8 +29,7 @@ class User(db.Model):
             "firstName": self.firstName,
             "lastName": self.lastName,
             "email": self.email,
-            "picture": self.picture,
-            "favorites": self.favorites
+            "picture": self.picture
             # do not serialize the password, its a security breach
         }
 
@@ -129,3 +128,8 @@ class Favorite(db.Model):
             "user_id": self.user_id
             # do not serialize the password, its a security breach
         }
+
+    # def deleteFavorite(id):
+    #     favorite = Favorite.query.get(id)
+    #     db.session.delete(favorite)
+    #     db.session.commit()
