@@ -51,7 +51,7 @@ def create_token():
     
     # create a new token with the user id inside
     access_token = create_access_token(identity=user.id)
-    return jsonify({"token": access_token})
+    return jsonify(access_token)
 
 # @app.route("/protected", methods=["GET"])
 # @jwt_required()
@@ -130,7 +130,8 @@ def get_favorites():
     # Access the identity of the current user with get_jwt_identity
     current_user_id = get_jwt_identity()
     all_favorites = Service.get_favorites(current_user_id)
-    return jsonify(all_favorites), 200
+    # return jsonify(all_favorites), 200
+    return jsonify("hello world"), 200
 
 @app.route('/favorites', methods=['POST'])
 def add_favorite():

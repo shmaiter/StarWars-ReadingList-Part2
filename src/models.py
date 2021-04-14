@@ -83,7 +83,7 @@ class Planet(db.Model):
     __tablename__ = 'planet'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(25))
-    population = db.Column(db.Integer)
+    population = db.Column(db.String(25))
     terrain = db.Column(db.String(25))
     climate = db.Column(db.String(25))
     diameter = db.Column(db.Integer)
