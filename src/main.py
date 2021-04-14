@@ -146,7 +146,8 @@ def add_favorite():
 
 @app.route('/favorites/<int:position>', methods=['DELETE'])
 def delete_favorite(position):
-    favorite = Favorite.query.get(position)
+    favorite = Favorite.query.filter_by(item_id=position).first()
+    # favorite = Favorite.query.get(position)
 
     if favorite is None:
         raise APIException('Favorite not found', status_code=404)
