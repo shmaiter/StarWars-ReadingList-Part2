@@ -137,7 +137,7 @@ def get_favorites():
 def add_favorite():
     request_body = request.get_json()
     # define an instance of Favorite
-    favorite = Favorite(date=request_body["date"], item_id=request_body["item_id"], item_type=request_body["item_type"], user_id=request_body["user_id"])
+    favorite = Favorite(item_id=request_body["item_id"], item_type=request_body["item_type"], user_id=request_body["user_id"])
     # save it on the database table for Favorites
     db.session.add(favorite)
     db.session.commit()
