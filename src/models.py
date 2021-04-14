@@ -40,6 +40,7 @@ class User(db.Model):
         all_users = list(map(lambda x: x.serialize(), all_users))
         return all_users
 
+    # db.session tells the class what database session to use to introspect and determine attribute data types.
     def deleteUser(id):
         user = User.query.get(id)
         db.session.delete(user)
@@ -87,9 +88,9 @@ class Planet(db.Model):
     population = db.Column(db.String(25))
     terrain = db.Column(db.String(25))
     climate = db.Column(db.String(25))
-    diameter = db.Column(db.Integer)
-    orbital_period = db.Column(db.Integer)
-    
+    diameter = db.Column(db.String(25))
+    orbital_period = db.Column(db.String(25))
+
     def __repr__(self):
         return '<Planet %r>' % self.name
 
@@ -102,6 +103,7 @@ class Planet(db.Model):
             "climate": self.climate,
             "diameter": self.diameter,
             "orbital_period": self.orbital_period
+
             # do not serialize the password, its a security breach
         }
 
