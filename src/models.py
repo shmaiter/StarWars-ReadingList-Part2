@@ -23,6 +23,8 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.firstName
 
+    # serializing means converting Python objects, which can contain other Python objects and complex data types, 
+    # into simpler data structures that can be parsed into JSON datatypes
     def serialize(self):
         return {
             "id": self.id,
@@ -51,8 +53,7 @@ class Character(db.Model):
     hair_color = db.Column(db.String(25))
     eye_color = db.Column(db.String(25))
     birth_year = db.Column(db.String(25))
-    mass = db.Column(db.Float)
-    # favorite_id = db.Column(db.Integer, ForeignKey('favorite.id'))
+    mass = db.Column(db.String(25))
     
     def __repr__(self):
         return '<Character %r>' % self.name
@@ -88,7 +89,6 @@ class Planet(db.Model):
     climate = db.Column(db.String(25))
     diameter = db.Column(db.Integer)
     orbital_period = db.Column(db.Integer)
-    # favorite_id = db.Column(db.Integer, ForeignKey('favorite.id'))
     
     def __repr__(self):
         return '<Planet %r>' % self.name
@@ -118,13 +118,9 @@ class Planet(db.Model):
 class Favorite(db.Model):
     __tablename__ = 'favorite'
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.String(25))
     item_id = db.Column(db.Integer, unique=False, nullable=False)
     item_type = db.Column(db.String(80), unique=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
-
-    # character = db.relationship('Character', back_populates="favorite") # One to Many
-    # planet = db.relationship('Planet', back_populates="favorite") # One to Many
     
     # def __repr__(self):
     #     return '<Favorite %r>' % self.date
@@ -132,7 +128,6 @@ class Favorite(db.Model):
     def serialize(self):
         return {
             "id": self.id,
-            "date": self.date,
             "item_id": self.item_id,
             "item_type": self.item_type,
             "user_id": self.user_id
