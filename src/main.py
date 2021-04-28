@@ -159,6 +159,33 @@ def delete_favorite(position):
     }
     return jsonify(response_body), 200
 
+# Endpoint for populate the database
+@app.route('/populate', methods=['GET'])
+def populate():
+    u1 = User(firstName='userF01', lastName='userL01', email='user01@example.com', password="01", is_active=False, picture="picture1.png")
+    u2 = User(firstName='userF02', lastName='userL02', email='user02@example.com', password="02", is_active=False, picture="picture02.png")
+    u3 = User(firstName='userF03', lastName='userL03', email='user03@example.com', password="03", is_active=False, picture="picture03.png")
+
+    c1 = Character(name='Luke Skywalker', birth_year='19BBY', gender='male', mass="75", eye_color='blue', hair_color='blond')
+    c2 = Character(name='C-3PO', birth_year='112BBY', gender='', mass="76", eye_color='yellow', hair_color='n/a')
+    c3 = Character(name='R2-D2', birth_year='33BBY', gender='n/a', mass="75", eye_color='red', hair_color='n/a')
+    c4 = Character(name='Darth Vader', birth_year='41.9BBY', gender='male', mass="75", eye_color='yellow', hair_color='none')
+    c5 = Character(name='Leia Organa', birth_year='19BBY', gender='female', mass="75", eye_color='brown', hair_color='brown')
+    c6 = Character(name='Owen Lars', birth_year='52BBY', gender='male', mass="75", eye_color='blue', hair_color='brown, grey')
+
+    p1 = Planet(name='Tatooine', population='200000', terrain='desert', diameter='10465.0', climate='arid', orbital_period='268')
+    p2 = Planet(name='Alderaan', population='2000000000', terrain='grasslands, mountains', diameter='12500.0', climate='temperate', orbital_period='268')
+    p3 = Planet(name='Yavin IV', population='1000', terrain='jungle, rainforests', diameter='10200.0', climate='temperate, tropical', orbital_period='268')
+    p4 = Planet(name='Hoth', population='5000', terrain='tundra, ice caves', diameter='7200.0', climate='frozen', orbital_period='268')
+    p5 = Planet(name='Dagobah', population='6500', terrain='swamp, jungles', diameter='8900.0', climate='murky', orbital_period='268')
+    p6 = Planet(name='Bespin', population='6000000', terrain='gas giant', diameter='118000.0', climate='temperate', orbital_period='268')
+
+    db.session.add_all([u1, u2, u3, c1, c2, c3, c4, c5, c6, p1, p2, p3, p4, p5, p6])
+    db.session.commit()
+
+    return('Data populated')
+
+
 # this only runs if `$ python src/main.py` is executed
 
 if __name__ == '__main__':
